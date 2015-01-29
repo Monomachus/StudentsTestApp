@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="public-principal" class="col-xs-12">
+
+    <div id="list">
+
+        <table class="table sortable" id="tlist">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Birth Date</th>
+                    <th class="list-buttons"></th>
+                </tr>
+            </thead>
+            <tbody data-bind='foreach: students'>
+                <tr class="list-buttons">
+                    <td data-bind='html: NameHtml'></td>
+                    <td data-bind='text: Surname'></td>
+                    <td data-bind='text: Birthdate'></td>
+                    <td>
+                        <a data-bind="click: $parent.editdialog" class=" btn btn-listado btn-edit btn-default" title="Edit" href="#"><span class="glyphicon glyphicon-edit"></span></a>                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bottomspace-2">
+            <button data-bind="click: createdialog" class="btn btn-primary" id="add"><span class="glyphicon glyphicon-plus"></span> Add student</button>
+        </div>
+
+    </div>
+
+
+    <div id="edit">
+        <!-- Modal -->
+        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Edit</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div role="alert" class="alert alert-danger hidden">
+                            <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <span id="EditModalErrors"></span>
+                        </div>
+
+                        <div id="myEditModalContent"></div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" title="Back" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-list"></span> Back</button>
+                        <button type="button" data-bind="click: update" title="Save" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    
+    <div id="create">
+        <!-- Modal -->
+        <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Create</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div role="alert" class="alert alert-danger hidden">
+                            <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <span id="EditModalErrors"></span>
+                        </div>
+
+                        <div id="myCreateModalContent"></div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" title="Back" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-list"></span> Back</button>
+                        <button type="button" data-bind="click: create" title="Save" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/handlebars")
+
+    <script type="text/javascript" src="~/Scripts/Models/students.js"></script>
+}
+
+
+
+@*
+    <div class="jumbotron">
+        <h1>ASP.NET</h1>
+        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+        <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Getting started</h2>
+            <p>
+                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+                enables a clean separation of concerns and gives you full control over markup
+                for enjoyable, agile development.
+            </p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Get more libraries</h2>
+            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Web Hosting</h2>
+            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        </div>
+    </div>
+
+*@
