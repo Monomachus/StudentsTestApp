@@ -17,7 +17,7 @@ $(function () {
         self.Uniqueid = ko.observable("");
         self.Name = ko.observable("");
         self.Surname = ko.observable("");
-        self.Birthdate = ko.observable("");
+        self.Birthdate = ko.observable(new Date());
 
         self.create = function(data) {
             var item = {
@@ -36,10 +36,16 @@ $(function () {
             viewModel.DeleteItem(idStudent);
         }
 
-        self.update = function(data) {
-            console.log("To implement");
+        self.update = function (data) {
+            
+            var item = {
+                Uniqueid: data.Uniqueid(),
+                Name: data.Name(),
+                Surname: data.Surname(),
+                Birthdate: data.Birthdate(),
+            };
 
-            viewModel.UploadItem(id, item);
+            viewModel.UpdateItem(item);
         };
 
     };
@@ -79,6 +85,16 @@ $(function () {
             item.Name("");
             item.Surname("");
             item.Birthdate("");
+        }
+
+        self.MapToVm = function (data, viewModel) {
+
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && viewModel[property]) {
+                    viewModel[property](data[property]);
+                }
+            }
+
         }
 
         // Load all students
@@ -132,7 +148,33 @@ $(function () {
         }
 
         self.editdialog = function (data) {
-            console.log("To implement");
+            self.CleanItem(viewModelStudent);
+
+            self.MapToVm(ko.toJS(data), viewModelStudent);
+
+            if ($('.datepicker').data("DateTimePicker")) {
+                $('.datepicker').data("DateTimePicker").destroy();
+            }
+
+            var template = Handlebars.getTemplate('Create');
+            var html = template(data);
+
+            $("#myEditModalContent").html(html);
+            $("#myCreateModalContent").html("");
+
+            if (self.LoadedEditDialog() == true) {
+                ko.cleanNode(document.getElementById("edit"));
+            }
+            else {
+                self.LoadedEditDialog(true);
+            }
+
+            ActivateControls();
+            console.log(self);
+
+            ko.applyBindings(viewModelStudent, document.getElementById("edit"));
+
+            $('#EditModal').modal();
         }
 
         self.deletedialog = function (data) {
@@ -159,8 +201,24 @@ $(function () {
             $('#DeleteModal').modal();
         }
        
-        self.UploadItem = function(id, item) {
-            console.log("To implement");
+        self.UpdateItem = function(item) {
+            $.ajax({
+                data: JSON.stringify(item),
+                type: "PUT",
+                url: urlPath + '/student/' + item.Uniqueid,
+                contentType: "application/json; charset=utf-8"
+                // this is not have simple HttpCode.OK fail -> dataType: "json"
+            }).done(function (response) {
+                var student = ko.utils.arrayFirst(viewModel.students(), function (st) {
+                    return st.Uniqueid() == item.Uniqueid;
+                });
+
+                self.MapToVm(item, student);
+                
+                $('#EditModal').modal('hide');
+            }).fail(function (response) {
+                alert("¡Error!");
+            });
         };
 
         self.CreateItem = function(item) {        
@@ -190,8 +248,8 @@ $(function () {
 
                         strErrors += "</ul>";
 
-                        $("#CreateModalErrores").html(strErrors);
-                        $("#CreateModalErrores").closest("div").removeClass("hidden");
+                        $("#CreateModalErrors").html(strErrors);
+                        $("#CreateModalErrors").closest("div").removeClass("hidden");
                     }
                 }
 
@@ -216,7 +274,6 @@ $(function () {
             });
         }
 
-
         self.loadTemplates = function () {
             Handlebars.getExternalTemplate('Create', "/Dialogs/CreateStudent");
 
@@ -226,7 +283,6 @@ $(function () {
             console.log("To implement");
         }
 
-        
     }
 
     function Map(student) {

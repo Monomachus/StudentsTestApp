@@ -44,8 +44,14 @@ namespace WebApplicationTest.Controllers
         }
 
         // PUT: api/Student/5
-        public void Put(string id, [FromBody]Student value)
-        {            
+        [HttpPut]
+        public HttpResponseMessage Put(int id, [FromBody]Student updatedStudent)
+        {
+            if (!Students.Update(id, updatedStudent)) {
+                return this.Request.CreateResponse(HttpStatusCode.InternalServerError, "Coudn't update the student");
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // DELETE: api/Student/5

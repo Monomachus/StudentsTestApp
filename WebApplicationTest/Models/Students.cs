@@ -46,37 +46,32 @@ namespace WebApplicationTest.Models
                     
                 }
                 
-
-
-                    _students.Add(newstudent);
+                _students.Add(newstudent);
             }
         }
 
-        public static void Update(Student updatestudent)
+        public static bool Update(int id, Student updatedStudent)
         {
-            if (_students != null)
+            bool isUpdatePerformed = false;
+
+            if (_students != null &&
+                _students.Any(x => x.UniqueId == id))
             {
-                int index = _students.FindIndex(x => x.UniqueId == updatestudent.UniqueId);
-                if (index < 0)
-                {
-                    _students.Add(updatestudent);
-                }
-                else
-                {
-                    _students[index] = updatestudent;
-                }
+                var studentToUpdate = _students.SingleOrDefault(x => x.UniqueId == updatedStudent.UniqueId);
 
-                /*var toUpdate = _students.SingleOrDefault(x => x.UniqueId == updatestudent.UniqueId);
-
-                if (toUpdate != null)
+                if (studentToUpdate != null)
                 {
-                    toUpdate.Name = updatestudent.Name;
-                    toUpdate.Surname = updatestudent.Surname;
-                    toUpdate.BirthDate = updatestudent.BirthDate;
-                }*/
+                    studentToUpdate.Name = updatedStudent.Name;
+                    studentToUpdate.Surname = updatedStudent.Surname;
+                    studentToUpdate.BirthDate = updatedStudent.BirthDate;
+
+                    isUpdatePerformed = true;
+                }
             }
-        }
 
+            return isUpdatePerformed;
+        }
+        
         public static void Delete(int idStudentToDelete)
         {
             if (_students != null)
@@ -89,5 +84,6 @@ namespace WebApplicationTest.Models
                 }
             }
         }
+
     }
 }

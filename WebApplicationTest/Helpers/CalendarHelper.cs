@@ -83,7 +83,7 @@ namespace WebApplicationTest.Helpers
 
             if (result.ToString() != "")
             {
-                CultureInfo culture = CultureInfo.CreateSpecificCulture("es-ES");
+                CultureInfo culture = CultureInfo.CreateSpecificCulture(CultureInfo.CurrentCulture.ToString());
                 var styles = DateTimeStyles.None;
 
                 try

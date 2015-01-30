@@ -76,7 +76,7 @@
                     <div class="modal-body">
                         <div role="alert" class="alert alert-danger hidden">
                             <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                            <span id="EditModalErrors"></span>
+                            <span id="CreateModalErrors"></span>
                         </div>
 
                         <div id="myCreateModalContent"></div>
@@ -118,8 +118,8 @@
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/handlebars")
 
     <script type="text/javascript" src="~/Scripts/Models/students.js"></script>
