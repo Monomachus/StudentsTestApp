@@ -18,7 +18,7 @@ namespace WebApplicationTest.Controllers
         }
 
         // GET: api/Student/5
-        public Student Get(string id)
+        public Student Get(int id)
         {
             var list = Students.List();
 
@@ -34,9 +34,9 @@ namespace WebApplicationTest.Controllers
 
             if (list.Any())
             {
-                nextId = Int32.Parse(list.Max(s => s.UniqueId)) + 1;
+                nextId = list.Max(s => s.UniqueId) + 1;
             }
-            value.UniqueId = nextId.ToString();
+            value.UniqueId = nextId;
 
             Students.Add(value);
 
@@ -49,8 +49,10 @@ namespace WebApplicationTest.Controllers
         }
 
         // DELETE: api/Student/5
+        [HttpDelete]
         public void Delete(int id)
         {
+           Students.Delete(id);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace WebApplicationTest.Models
                             {
                                 new Student
                                 {
-                                    UniqueId = "1",
+                                    UniqueId = 1,
                                     Name = "John",
                                     Surname = "Smith",
                                     BirthDate = DateTime.Parse("01/01/1975")
@@ -41,11 +41,9 @@ namespace WebApplicationTest.Models
 
                 if (lastStudent != null)
                 {                    
-                    int uniqueId;
-                    if (Int32.TryParse(lastStudent.UniqueId, out uniqueId))
-                    {
-                        newstudent.UniqueId = (uniqueId + 1).ToString();
-                    }
+                    int uniqueId = lastStudent.UniqueId;
+                    newstudent.UniqueId = uniqueId + 1;
+                    
                 }
                 
 
@@ -79,9 +77,17 @@ namespace WebApplicationTest.Models
             }
         }
 
-        public static void Delete(Student delstudent)
+        public static void Delete(int idStudentToDelete)
         {
+            if (_students != null)
+            {
+                var studentToDelete = _students.SingleOrDefault(x => x.UniqueId == idStudentToDelete);
 
+                if (studentToDelete != null) 
+                {
+                    _students.Remove(studentToDelete);
+                }
+            }
         }
     }
 }

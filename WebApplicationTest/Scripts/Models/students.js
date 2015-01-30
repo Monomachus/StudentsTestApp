@@ -30,6 +30,12 @@ $(function () {
 
         };
 
+        self.deleteFn = function (data) {
+            var idStudent = data.Uniqueid();
+
+            viewModel.DeleteItem(idStudent);
+        }
+
         self.update = function(data) {
             console.log("To implement");
 
@@ -44,6 +50,7 @@ $(function () {
         self.students = ko.observableArray([]);
         self.LoadedEditDialog = ko.observable(false);
         self.LoadedCreateDialog = ko.observable(false);
+        self.LoadedDeleteDialog = ko.observable(false);
        
         // Load a student
         self.LoadItem = function (id, item) {
@@ -73,7 +80,6 @@ $(function () {
             item.Surname("");
             item.Birthdate("");
         }
-
 
         // Load all students
         self.LoadAll = function () {            
@@ -129,6 +135,29 @@ $(function () {
             console.log("To implement");
         }
 
+        self.deletedialog = function (data) {
+            self.CleanItem(viewModelStudent);
+
+            var template = Handlebars.getTemplate('Delete');
+            var html = template(ko.toJS(data));
+
+            viewModelStudent.Uniqueid(data.Uniqueid());
+
+            $("#myDeleteModalContent").html(html);
+
+            if (self.LoadedDeleteDialog() == true) {
+                ko.cleanNode(document.getElementById("delete"));
+            }
+            else {
+                self.LoadedDeleteDialog(true);
+            }
+          
+            console.log(self);
+
+            ko.applyBindings(viewModelStudent, document.getElementById("delete"));
+
+            $('#DeleteModal').modal();
+        }
        
         self.UploadItem = function(id, item) {
             console.log("To implement");
@@ -169,9 +198,29 @@ $(function () {
             });
         };
 
+        self.DeleteItem = function (id) {
+            $.ajax({
+                type: "DELETE",
+                url: urlPath + '/student/' + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            }).done(function (response) {
+
+                viewModel.students.remove(function (student) {
+                    return student.Uniqueid() === id;
+                });
+
+                $('#DeleteModal').modal('hide');
+            }).fail(function (response) {
+                alert("¡Error!");
+            });
+        }
+
 
         self.loadTemplates = function () {
             Handlebars.getExternalTemplate('Create', "/Dialogs/CreateStudent");
+
+            Handlebars.getExternalTemplate('Delete', "/HbTemplates/DeleteStudent");
             
             // Edit
             console.log("To implement");
