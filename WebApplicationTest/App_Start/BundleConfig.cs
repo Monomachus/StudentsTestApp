@@ -23,7 +23,6 @@ namespace WebApplicationTest
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/moment-with-locales.min.js",
                       "~/Scripts/bootstrap-datetimepicker.min.js",
-                      "~/Scripts/Models/Controls.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
@@ -32,7 +31,8 @@ namespace WebApplicationTest
                       "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
-                "~/Scripts/knockout-3.2.0.js"));
+                "~/Scripts/knockout-3.2.0.js",
+                "~/Scripts/ko.dateBindings.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/handlebars").Include(
                 "~/Scripts/handlebars.min.js",

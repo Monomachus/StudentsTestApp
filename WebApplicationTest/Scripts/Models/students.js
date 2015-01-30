@@ -1,4 +1,10 @@
 ﻿var urlPath = "/api";
+var spanishDateFormat = "DD/MM/YYYY";
+
+String.prototype.endsWith = function (str) {
+    var lastIndex = this.toUpperCase().lastIndexOf(str.toUpperCase());
+    return (lastIndex !== -1) && (lastIndex + str.length === this.length);
+}
 
 $(function () {
 
@@ -18,12 +24,13 @@ $(function () {
         self.Name = ko.observable("");
         self.Surname = ko.observable("");
         self.Birthdate = ko.observable(new Date());
+        self.BirthdateString = ko.observable("");
 
         self.create = function(data) {
             var item = {
                 Name: data.Name(),
                 Surname: data.Surname(),
-                Birthdate: data.Birthdate(),
+                Birthdate: moment(data.Birthdate()).format(spanishDateFormat)
             };
 
             viewModel.CreateItem(item);
@@ -42,7 +49,7 @@ $(function () {
                 Uniqueid: data.Uniqueid(),
                 Name: data.Name(),
                 Surname: data.Surname(),
-                Birthdate: data.Birthdate(),
+                Birthdate: data.BirthdateString(),
             };
 
             viewModel.UpdateItem(item);
@@ -58,40 +65,24 @@ $(function () {
         self.LoadedCreateDialog = ko.observable(false);
         self.LoadedDeleteDialog = ko.observable(false);
        
-        // Load a student
-        self.LoadItem = function (id, item) {
-            $.ajax({
-                type: "GET",
-                url: urlPath + '/student/' + id,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-
-                    item.Uniqueid(id);
-                    item.Name(data.Name);
-                    item.Surname(data.Surname);
-                    item.Birthdate(moment(data.BirthDate).format("DD/MM/YYYY"));
-
-                },
-                error: function (err) {
-                    alert(err.status + " : " + err.statusText);
-                }
-            });
-        }
-
         // Clean data a student
         self.CleanItem = function(item) {
             item.Uniqueid("");
             item.Name("");
             item.Surname("");
-            item.Birthdate("");
+            item.Birthdate(new Date());
+            item.BirthdateString("");
         }
 
-        self.MapToVm = function (data, viewModel) {
+        self.MapToVm = function (data, viewModel, toJsDate) {
 
             for (var property in data) {
                 if (data.hasOwnProperty(property) && viewModel[property]) {
-                    viewModel[property](data[property]);
+                    if (property.endsWith("date") && toJsDate) {
+                        viewModel[property](moment(data[property + "String"], spanishDateFormat));
+                    } else {
+                        viewModel[property](data[property]);
+                    }
                 }
             }
 
@@ -138,7 +129,6 @@ $(function () {
             else {
                 self.LoadedCreateDialog(true);
             }
-            ActivateControls();
 
             console.log(self);
 
@@ -150,7 +140,7 @@ $(function () {
         self.editdialog = function (data) {
             self.CleanItem(viewModelStudent);
 
-            self.MapToVm(ko.toJS(data), viewModelStudent);
+            self.MapToVm(ko.toJS(data), viewModelStudent, toJsDate = true);
 
             if ($('.datepicker').data("DateTimePicker")) {
                 $('.datepicker').data("DateTimePicker").destroy();
@@ -169,7 +159,6 @@ $(function () {
                 self.LoadedEditDialog(true);
             }
 
-            ActivateControls();
             console.log(self);
 
             ko.applyBindings(viewModelStudent, document.getElementById("edit"));
@@ -290,7 +279,8 @@ $(function () {
             this.Uniqueid = ko.observable(student.UniqueId);
             this.Name = ko.observable(student.Name);
             this.Surname = ko.observable(student.Surname);
-            this.Birthdate = ko.observable(moment(student.BirthDate).format("DD/MM/YYYY"));
+            this.Birthdate = ko.observable(moment(student.BirthdateString, spanishDateFormat));
+            this.BirthdateString = ko.observable(moment(student.BirthDate).format(spanishDateFormat));
 
             this.NameHtml = ko.dependentObservable(function() {
                 return '<a class="btn-edit" data-id="' + this.Uniqueid() + '" href="#">' + this.Name() + "</a>";
