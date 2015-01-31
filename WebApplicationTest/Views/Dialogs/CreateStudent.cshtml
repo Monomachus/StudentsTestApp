@@ -30,7 +30,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-4">
-                @Html.TextBoxCalendarFor(model => model.BirthDate, EnumTipoCalendarios.SoloFecha, new RouteValueDictionary(new { data_bind = "dateValue: Birthdate, format:'MM/DD/YYYY'" }))                                
+                @Html.TextBoxCalendarFor(model => model.BirthDate, EnumTipoCalendarios.SoloFecha, new RouteValueDictionary(new { data_bind = "value: BirthdateString, dateValue: Birthdate, format:'DD/MM/YYYY'" }))                                
                 @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
             </div>
         </div>

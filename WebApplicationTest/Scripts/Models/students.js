@@ -74,11 +74,11 @@ $(function () {
             item.BirthdateString("");
         }
 
-        self.MapToVm = function (data, viewModel, toJsDate) {
+        self.MapToVm = function (data, viewModel) {
 
             for (var property in data) {
                 if (data.hasOwnProperty(property) && viewModel[property]) {
-                    if (property.endsWith("date") && toJsDate) {
+                    if (property.endsWith("date")) {
                         viewModel[property](moment(data[property + "String"], spanishDateFormat));
                     } else {
                         viewModel[property](data[property]);
@@ -138,13 +138,13 @@ $(function () {
         }
 
         self.editdialog = function (data) {
-            self.CleanItem(viewModelStudent);
+            //self.CleanItem(viewModelStudent);
 
-            self.MapToVm(ko.toJS(data), viewModelStudent, toJsDate = true);
+            self.MapToVm(ko.toJS(data), viewModelStudent);
 
-            if ($('.datepicker').data("DateTimePicker")) {
-                $('.datepicker').data("DateTimePicker").destroy();
-            }
+            //if ($('.datepicker').data("DateTimePicker")) {
+            //    $('.datepicker').data("DateTimePicker").destroy();
+            //}
 
             var template = Handlebars.getTemplate('Create');
             var html = template(data);
@@ -201,6 +201,9 @@ $(function () {
                 var student = ko.utils.arrayFirst(viewModel.students(), function (st) {
                     return st.Uniqueid() == item.Uniqueid;
                 });
+
+                item["BirthdateString"] = item["Birthdate"];
+                item["Birthdate"] = moment(item["Birthdate"], spanishDateFormat);
 
                 self.MapToVm(item, student);
                 
