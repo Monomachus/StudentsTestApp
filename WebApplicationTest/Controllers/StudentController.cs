@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using WebApplicationTest.Filters;
 using WebApplicationTest.Models;
 
 namespace WebApplicationTest.Controllers
@@ -26,6 +27,7 @@ namespace WebApplicationTest.Controllers
         }
 
         // POST: api/Student
+        [ValidateModel]
         [ResponseType(typeof(Student))]
         public IHttpActionResult Post([FromBody]Student value)
         {
@@ -45,6 +47,7 @@ namespace WebApplicationTest.Controllers
 
         // PUT: api/Student/5
         [HttpPut]
+        [ValidateModel]
         public HttpResponseMessage Put(int id, [FromBody]Student updatedStudent)
         {
             if (!Students.Update(id, updatedStudent)) {

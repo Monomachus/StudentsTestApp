@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using WebApplicationTest.Filters;
 
 namespace WebApplicationTest
 {
@@ -10,6 +11,8 @@ namespace WebApplicationTest
         public static void Register(HttpConfiguration config)
         {
             // Configuración y servicios de API web
+
+            config.Filters.Add(new ValidateModelAttribute());
 
             // Rutas de API web
             config.MapHttpAttributeRoutes();

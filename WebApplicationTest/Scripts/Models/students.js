@@ -109,10 +109,17 @@ $(function () {
             });
         }
         
+        self.CleanErrorDiv = function (idModalErrors) {
+            $("#" + idModalErrors).html("");
+            $("#" + idModalErrors).closest("div").addClass("hidden");
+        }
+
         // Events
         self.createdialog = function () {
             self.CleanItem(viewModelStudent);
 
+            self.CleanErrorDiv("CreateModalErrors");
+            
             if ($('.datepicker').data("DateTimePicker")) {
                 $('.datepicker').data("DateTimePicker").destroy();                
             }
@@ -138,13 +145,9 @@ $(function () {
         }
 
         self.editdialog = function (data) {
-            //self.CleanItem(viewModelStudent);
+            self.CleanErrorDiv("EditModalErrors");
 
             self.MapToVm(ko.toJS(data), viewModelStudent);
-
-            //if ($('.datepicker').data("DateTimePicker")) {
-            //    $('.datepicker').data("DateTimePicker").destroy();
-            //}
 
             var template = Handlebars.getTemplate('Create');
             var html = template(data);
@@ -209,7 +212,7 @@ $(function () {
                 
                 $('#EditModal').modal('hide');
             }).fail(function (response) {
-                alert("¡Error!");
+                self.OnErrors(response, "EditModalErrors");
             });
         };
 
@@ -230,18 +233,8 @@ $(function () {
                     404: function() {
                         alert("¡Error!");
                     },
-                    400: function(xhr) {
-                        var errors = JSON.parse(xhr.responseText);
-                        var strErrors = "<ul>";
-
-                        $.each(errors, function(index, err) {
-                            strErrors += "<li>" + err + "</li>";
-                        });
-
-                        strErrors += "</ul>";
-
-                        $("#CreateModalErrors").html(strErrors);
-                        $("#CreateModalErrors").closest("div").removeClass("hidden");
+                    400: function (xhr) {
+                        self.OnErrors(xhr, "CreateModalErrors");
                     }
                 }
 
@@ -270,11 +263,23 @@ $(function () {
             Handlebars.getExternalTemplate('Create', "/Dialogs/CreateStudent");
 
             Handlebars.getExternalTemplate('Delete', "/HbTemplates/DeleteStudent");
-            
-            // Edit
-            console.log("To implement");
         }
 
+        self.OnErrors = function (xhr, idModalErrors) {
+            var errors = JSON.parse(xhr.responseText);
+            var strErrors = "<ul>";
+
+            if (errors && errors.ModelState) {
+                $.each(errors.ModelState, function (index, err) {
+                    strErrors += "<li>" + err + "</li>";
+                });
+
+                strErrors += "</ul>";
+
+                $("#" + idModalErrors).html(strErrors);
+                $("#" + idModalErrors).closest("div").removeClass("hidden");
+            }
+        }
     }
 
     function Map(student) {
